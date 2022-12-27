@@ -18,12 +18,14 @@ namespace MagicVilla_API.Controllers
     {
         protected APIResponse _response;
         private readonly IVillaNumberRepository _dbVillaNumber;
+        private readonly IVillaRepository _dbVilla;
         private readonly IMapper _mapper;
-        public VillaNumberAPIController(IVillaNumberRepository dbVillaNumber, IMapper mapper) 
+        public VillaNumberAPIController(IVillaNumberRepository dbVillaNumber, IMapper mapper, IVillaRepository dbVilla) 
         { 
             _dbVillaNumber = dbVillaNumber;
             _mapper = mapper;
             this._response = new();
+            _dbVilla = dbVilla;
         } 
 
         [HttpGet]
@@ -88,9 +90,15 @@ namespace MagicVilla_API.Controllers
                 if (await _dbVillaNumber.GetAsync(u => u.VillaNo == createDTO.VillaNo) != null)
                 {
                     ModelState.AddModelError("CustomError", "Villa Number already exists!");
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    return BadRequest(_response);
+                    return BadRequest(ModelState);
                 }
+
+                if (await _dbVilla.GetAsync(u => u.Id == createDTO.VillaID) == null)
+                {
+                    ModelState.AddModelError("CustomError", "Villa ID is invalid!");
+                    return BadRequest(ModelState);
+                }
+
                 if (createDTO == null)
                 {
                     return BadRequest(createDTO);
@@ -157,6 +165,12 @@ namespace MagicVilla_API.Controllers
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     return BadRequest(_response);
+                }
+
+                if (await _dbVilla.GetAsync(u => u.Id == updateDTO.VillaID) == null)
+                {
+                    ModelState.AddModelError("CustomError", "Villa ID is invalid!");
+                    return BadRequest(ModelState);
                 }
 
                 VillaNumber model = _mapper.Map<VillaNumber>(updateDTO);
