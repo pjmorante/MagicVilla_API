@@ -94,7 +94,7 @@ namespace MagicVilla_Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> DeleteteVilla(VillaDTO model)
+        public async Task<IActionResult> DeleteVilla(VillaDTO model)
         {
             var response = await _villaService.DeleteAsync<APIResponse>(model.Id);
             if (response != null && response.IsSuccess)
