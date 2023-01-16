@@ -24,7 +24,7 @@ namespace MagicVilla_API.Repository
             //UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _db = db;
-            //_mapper = mapper;
+            _mapper = mapper;
             //_userManager = userManager;
             secretKey = configuration.GetValue<string>("ApiSettings:Secret");
             //_roleManager = roleManager;
@@ -46,7 +46,11 @@ namespace MagicVilla_API.Repository
                 && u.Password == loginRequestDTO.Password);
             if(user == null)
             {
-                return null;
+                return new LoginResponseDTO()
+                {
+                    Token = "",
+                    User = null
+                };
             }
             //if user was found generate JWT Token
             var tokenHandler = new JwtSecurityTokenHandler();
