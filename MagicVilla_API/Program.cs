@@ -32,7 +32,7 @@ builder.Services.AddAuthentication(x =>
     .AddJwtBearer(x => {
         x.RequireHttpsMetadata = false;
         x.SaveToken = true;
-        x.Authority = "https://localhost:7001/";
+        //x.Authority = "https://localhost:7001/";
         x.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
