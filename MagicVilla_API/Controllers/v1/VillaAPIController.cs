@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
-namespace MagicVilla_API.Controllers
+namespace MagicVilla_API.Controllers.v1
 {
     //[Route("api/VillaAPI")]
     [Route("api/v{version:apiVersion}/VillaAPI")]
@@ -23,13 +23,13 @@ namespace MagicVilla_API.Controllers
         private readonly IVillaRepository _dbVilla;
         private readonly ILogging _logger;
         private readonly IMapper _mapper;
-        public VillaAPIController(ILogging logger, IVillaRepository dbVilla, IMapper mapper) 
-        { 
+        public VillaAPIController(ILogging logger, IVillaRepository dbVilla, IMapper mapper)
+        {
             _logger = logger;
             _dbVilla = dbVilla;
             _mapper = mapper;
-            this._response = new();
-        } 
+            _response = new();
+        }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -45,17 +45,17 @@ namespace MagicVilla_API.Controllers
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
             }
-            catch (Exception ex) 
-            { 
-                _response.IsSuccess= false;
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
             return _response;
-            
+
         }
 
         [HttpGet("{id:int}", Name = "GetVilla")]
-        
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -236,7 +236,7 @@ namespace MagicVilla_API.Controllers
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 return BadRequest(_response);
             }
-            var villa = await _dbVilla.GetAsync(u => u.Id == id, tracked:false);
+            var villa = await _dbVilla.GetAsync(u => u.Id == id, tracked: false);
 
             VillaUpdateDTO villaDTO = _mapper.Map<VillaUpdateDTO>(villa);
 
