@@ -40,8 +40,8 @@ namespace MagicVilla_Web.Controllers
             {
                 LoginResponseDTO model = JsonConvert.DeserializeObject<LoginResponseDTO>(Convert.ToString(response.Result));
 
-                //var handler = new JwtSecurityTokenHandler();
-               //var jwt = handler.ReadJwtToken(model.Token);
+                var handler = new JwtSecurityTokenHandler();
+                var jwt = handler.ReadJwtToken(model.Token);
 
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                 identity.AddClaim(new Claim(ClaimTypes.Name, model.User.UserName));
